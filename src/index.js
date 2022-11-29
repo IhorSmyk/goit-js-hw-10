@@ -38,9 +38,9 @@ function infoCountries(data) {
       ({ name, capital, population, flags, languages }) =>
         ` <img src="${flags.png}" alt="country-flag" width="40px"/>
     <h1 style="display: inline;">${name.official}</h1>
-    <p>Capital: ${capital}</p>
-    <p>Population: ${population}</p>
-    <p>Languages: ${Object.values(languages)}</p>
+    <p><strong>Capital:</strong> ${capital}</p>
+    <p><strong>Population:</strong> ${population}</p>
+    <p><strong>Languages:</strong> ${Object.values(languages)}</p>
   `
     )
     .join('');
@@ -52,19 +52,19 @@ function listCountries(data) {
       ({ name, flags }) =>
         ` <li>
     <img src="${flags.png}" alt="country-flag" />
-    <p>${name}</p>
+    <p>${name.official}</p>
   </li>
   <li>
     <img src="${flags.png}" alt="country-flag" />
-    <p>${name}</p>
+    <p>${name.official}</p>
   </li>
   <li>
     <img src="${flags.png}" alt="country-flag" />
-    <p>${name}</p>
+    <p>${name.official}</p>
   </li>
   <li>
     <img src="${flags.png}" alt="country-flag" />
-    <p>${name}</p>
+    <p>${name.official}</p>
   </li>
   `
     )
