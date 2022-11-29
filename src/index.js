@@ -16,28 +16,28 @@ refs.input.addEventListener('input', e => {
   e.preventDefault();
   const findCountry = e.target.value;
   fetchCountries(findCountry).then((data) => {
-    console.log(data[0]);
+   renderCountries(data);
   });
 });
 
 //////////////////////////////////////////
 
 function renderCountries(data) {
-  if (data.length === 1) {
-    const markInfo = infoCountries(data);
-    refs.info.innerHTML = markInfo;
+  if (data.length === 1)    {
+    refs.info.innerHTML = infoCountries(data);
+  } else if (data.length > 1 && data.length <= 10) {
+    refs.list.innerHTML = listCountries(data);
   } else {
-    const markList = listCountries(data);
-    refs.list.innerHTML = markList;
+    //////////////  to do
   }
 }
 
 function infoCountries(data) {
-  let markup = data
+  return data
     .map(
       ({ name, capital, population, flags, languages }) =>
-        ` <img src="${flags.png}" alt="country-flag" />
-    <h1>${name}</h1>
+        ` <img src="${flags.png}" alt="country-flag" width="40px"/>
+    <h1 style="display: inline;">${name.official}</h1>
     <p>Capital: ${capital}</p>
     <p>Population: ${population}</p>
     <p>Languages: ${Object.values(languages)}</p>
@@ -47,7 +47,7 @@ function infoCountries(data) {
 }
 
 function listCountries(data) {
-  let markup = data
+  return data
     .map(
       ({ name, flags }) =>
         ` <li>
@@ -70,7 +70,3 @@ function listCountries(data) {
     )
     .join('');
 }
-
-renderCountries(data);
-
-fetchCountries(name);
