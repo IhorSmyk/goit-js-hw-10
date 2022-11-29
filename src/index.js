@@ -11,19 +11,18 @@ const refs = {
   info: document.querySelector('.country-info'),
 };
 
-
 refs.input.addEventListener('input', e => {
   e.preventDefault();
   const findCountry = e.target.value;
-  fetchCountries(findCountry).then((data) => {
-   renderCountries(data);
+  fetchCountries(findCountry).then(data => {
+    renderCountries(data);
   });
 });
 
 //////////////////////////////////////////
 
 function renderCountries(data) {
-  if (data.length === 1)    {
+  if (data.length === 1) {
     refs.info.innerHTML = infoCountries(data);
   } else if (data.length > 1 && data.length <= 10) {
     refs.list.innerHTML = listCountries(data);
@@ -51,22 +50,9 @@ function listCountries(data) {
     .map(
       ({ name, flags }) =>
         ` <li>
-    <img src="${flags.png}" alt="country-flag" />
-    <p>${name.official}</p>
-  </li>
-  <li>
-    <img src="${flags.png}" alt="country-flag" />
-    <p>${name.official}</p>
-  </li>
-  <li>
-    <img src="${flags.png}" alt="country-flag" />
-    <p>${name.official}</p>
-  </li>
-  <li>
-    <img src="${flags.png}" alt="country-flag" />
-    <p>${name.official}</p>
-  </li>
-  `
+    <img src="${flags.png}" alt="country-flag" width="40px"/>
+    <p style="display: inline;">${name.official}</p>
+  </li>`
     )
     .join('');
 }
