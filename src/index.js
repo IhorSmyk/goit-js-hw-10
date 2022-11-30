@@ -6,32 +6,55 @@ import Notiflix from 'notiflix';
 const DEBOUNCE_DELAY = 300;
 
 const refs = {
-  input: document.querySelector('input'),
+  input: document.querySelector('#search-box'),
   list: document.querySelector('.country-list'),
   info: document.querySelector('.country-info'),
 };
 
-refs.input.addEventListener('input', e => {
-  e.preventDefault();
-  const findCountry = e.target.value;
-  fetchCountries(findCountry).then(data => {
-    renderCountries(data);
-  });
-});
+const cleanMarkup = ref => (ref.innerHTML = '');
+
+refs.input.addEventListener('input', debounce(inputHandler, DEBOUNCE_DELAY));
+
+function inputHandler(e) {
+  const textInput = e.target.value.trim();
+
+  if (!textInput) {
+    cleanMarkup(refs.list);
+    cleanMarkup(refs.info);
+    return;
+  }
+
+  fetchCountries(textInput)
+    .then(data => {
+      console.log(data);
+      if (data.length > 10) {
+        Notiflix.Notify.info(
+          'Too many matches found. Please enter a more specific name'
+        );
+        return;
+      }
+      renderCountries(data);
+    })
+    .catch(err => {
+      cleanMarkup(refs.list);
+      cleanMarkup(refs.info);
+      Notiflix.Notify.failure('Oops, there is no country with that name');
+    });
+}
 
 function renderCountries(data) {
   if (data.length === 1) {
-    refs.info.innerHTML = infoCountries(data);
-    refs.list.innerHTML = "";
-  } else if (data.length > 1 && data.length <= 10) {
-    refs.list.innerHTML = listCountries(data);
-    refs.info.innerHTML = "";
+    cleanMarkup(refs.list);
+    const markupInfo = infoCountry(data);
+    refs.info.innerHTML = markupInfo;
   } else {
-    //////////////  to do
+    cleanMarkup(refs.info);
+    const markupList = listCountries(data);
+    refs.list.innerHTML = markupList;
   }
 }
 
-function infoCountries(data) {
+function infoCountry(data) {
   return data
     .map(
       ({ name, capital, population, flags, languages }) =>
@@ -48,7 +71,7 @@ function listCountries(data) {
   return data
     .map(
       ({ name, flags }) =>
-     `<li style="margin-bottom: 13px">
+        `<li style="margin-bottom: 13px">
         <img src="${flags.png}" alt="country-flag" width="40px"/>
         <p style="display: inline;">${name.official}</p>
      </li> `
